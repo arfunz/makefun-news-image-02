@@ -13,7 +13,11 @@ def main():
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output"
     os.makedirs(out_dir, exist_ok=True)
     src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "entry.png")
-    shutil.copyfile(src, os.path.join(out_dir, "entry.png"))
+    dst = os.path.join(out_dir, "entry.png")
+    shutil.copyfile(src, dst)
+    # Fail loudly on a truncated copy instead of submitting a broken image.
+    if os.path.getsize(dst) != os.path.getsize(src):
+        raise SystemExit("entry.png copy incomplete")
 
 
 if __name__ == "__main__":
